@@ -1,0 +1,265 @@
+<!doctype html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>CRUD Básico</title>
+    <!--BOOTSTRAP-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!--BOOTSTRAP ICONS-->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <!--CSS-->
+    <link rel="stylesheet" href="../static/css/style.css">
+    <!--CDN JQUERY-->
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <!--CDN MOMENT JS-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="https://momentjs.com/downloads/moment-with-locales.min.js"></script>
+    <!--DATATABLE JQUERY-->
+    <link href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <h1 class="text-center text-white">CRUD Básico com Flask</h1>
+
+    <div class="container-fluid">
+        <h3 class="text-center text-white">Inserir Cadastro</h3>
+        <div class="row m-1 divflex">
+            <div class="col-md-4">
+                <div class="form-floating mb-3">
+                    <input type="text" name="nome" required class="form-control" id="nome_aluno" placeholder="Nome">
+                    <label for="nome_aluno">Nome</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-floating mb-3">
+                    <input type="email" name="email" required class="form-control" id="email_aluno"
+                        placeholder="name@example.com">
+                    <label for="email_aluno">Email</label>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-floating mb-3">
+                    <input type="text" name="telefone" required class="form-control" id="telefone_aluno"
+                        placeholder="Telefone">
+                    <label for="telefone_aluno">Telefone</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="row m-1 divflex">
+            <div class="col-md-4">
+                <div class="form-floating mb-3">
+                    <input type="date" name="data_nascimento" required onchange="calcular_idade()"
+                        onkeyup="calcular_idade()" class="form-control" id="data_nascimento"
+                        placeholder="Data Nascimento">
+                    <label for="data_nascimento">Data Nascimento</label>
+                </div>
+            </div>
+
+            <div class="col-md-2">
+                <div class="form-floating mb-3">
+                    <input type="text" readonly name="idade" class="form-control" id="idade_aluno" placeholder="Idade">
+                    <label for="idade_aluno">Idade</label>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <button class="btn btn-success btn-lg card_deal" onclick="cadastrar_aluno()" type="submit">Salvar</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <h3 class="text-center  text-white">Tabela Alunos</h3>
+        <div class="row m-1 divflex">
+            <div class="col-md-10  text-white">
+                <table class="table table-hover table-responsive table-bordered" id="tabela_alunos">
+                    <thead class="table-dark">
+                        <tr>
+                            <th scope="col" class="text-center">Nome</th>
+                            <th scope="col" class="text-center">Email</th>
+                            <th scope="col" class="text-center">Telefone</th>
+                            <th scope="col" class="text-center">Data Nascimento</th>
+                            <th scope="col" class="text-center">Idade</th>
+                            <th scope="col" class="text-center">Editar</th>
+                            <th scope="col" class="text-center">Excluir</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {%for aluno in alunos%}
+                        <tr>
+                            <td class="text-center">{{aluno.nome}}</td>
+                            <td class="text-center">{{aluno.email}}</td>
+                            <td class="text-center">{{aluno.telefone}}</td>
+                            <td class="text-center">{{aluno.data_nascimento}}</td>
+                            <td class="text-center">{{aluno.idade}}</td>
+                            <td class="text-center"><button class="btn btn-primary card_deal" data-bs-toggle="modal"
+                                data-bs-target="#editaDados{{aluno.id}}"><i
+                                        class="bi bi-pencil-square text-white"></i></button></td>
+                            <td class="text-center"><button class="btn btn-danger card_deal" data-bs-toggle="modal"
+                                data-bs-target="#excluiDados{{aluno.id}}"><i
+                                        class="bi bi-trash3 text-white"></i></button></td>
+                        </tr>
+                        {%endfor%}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        {%for aluno in alunos%}
+            <!-- Modal Edita Dados Aluno-->
+            <div class="modal fade" id="editaDados{{aluno.id}}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastro Aluno - {{aluno.nome}} </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row m-1">
+                                <div class="col-md-6">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="nome" value="{{aluno.nome}}" class="form-control" id="nome_aluno" placeholder="Nome">
+                                        <label for="nome_aluno">Nome</label>
+                                    </div>
+                                </div>  
+                                
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input type="email" name="email" value="{{aluno.email}}" class="form-control" id="email_aluno"
+                                            placeholder="name@example.com">
+                                        <label for="email_aluno">Email</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row m-1">
+                                <div class="col-md-3">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="telefone" value="{{aluno.telefone}}" class="form-control" id="telefone_aluno"
+                                            placeholder="Telefone">
+                                        <label for="telefone_aluno">Telefone</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" name="data_nascimento" value="{{aluno.data_nascimento}}" class="form-control" id="data_nascimento"
+                                            placeholder="Data Nascimento">
+                                        <label for="data_nascimento">Data Nascimento</label>
+                                    </div>
+                                </div>
+                    
+                                <div class="col-md-2">
+                                    <div class="form-floating mb-3">
+                                        <input type="text" value="{{aluno.idade}}" name="idade" class="form-control" id="idade_aluno" placeholder="Idade">
+                                        <label for="idade_aluno">Idade</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sair</button>
+                            <button type="submit" onclick="editar_registro({{aluno.id}})" class="btn btn-primary" data-bs-dismiss="modal">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Modal Exclui Dados Aluno-->
+            <div class="modal fade" id="excluiDados{{aluno.id}}" tabindex="-1"
+                aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title fs-5" id="exampleModalLabel">Cadastro Aluno - {{aluno.nome}} </h1>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <h3 class="fw-bold text-danger text-center">Atenção!</h3>
+                            <h5 >Deseja realmente excluir o registro referente ao aluno <span class="fw-bold nome_aluno{{aluno.id}}">{{aluno.nome}}</span>? </h5>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Sair</button>
+                            <a type="button" href="{{url_for('deletar_registro', aluno_id = aluno.id)}}"  class="btn btn-danger">Excluir</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {%endfor%}
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+</body>
+
+<script>
+    new DataTable("#tabela_alunos");
+
+    function calcular_idade() {
+        var data_atual = moment();
+        var data_nascimento = $(`.container-fluid`).find(`#data_nascimento`).val();
+        var dataFormatada = moment(data_nascimento);
+        var total = data_atual.diff(dataFormatada, 'years');
+        $(`.container-fluid`).find('#idade_aluno').val(total);
+    }
+    
+    //CADASTRAR NOVO ALUNO
+    function cadastrar_aluno() {
+        const nome = $(`.container-fluid`).find('#nome_aluno').val();
+        const email = $(`.container-fluid`).find('#email_aluno').val();
+        const telefone = $(`.container-fluid`).find('#telefone_aluno').val();
+        const idade = $(`.container-fluid`).find('#idade_aluno').val();
+        const data_nascimento = $(`.container-fluid`).find('#data_nascimento').val();
+        //FORMATANDO DATA DE NASCIMENTO
+        var dataFormatada = moment(data_nascimento).format('DD/MM/YYYY');
+
+        //CRIANDO DICIONARIO
+        var dict = [{ "nome": nome, "email": email, "telefone": telefone, "idade": idade, "data_nascimento": dataFormatada }];
+       
+        $.ajax({
+            type: "POST",
+            url: "/cadastrar_novo_aluno",
+            data: JSON.stringify(dict),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (result) {
+                numRows.innerHTML = result.rows;
+            }
+        });
+
+        window.location.reload();
+    }
+
+    //EDITAR REGISTRO DO ALUNO
+    function editar_registro(aluno_id){
+        const nome = $(`#editaDados${aluno_id}`).find('#nome_aluno').val();
+        const email = $(`#editaDados${aluno_id}`).find('#email_aluno').val();
+        const telefone = $(`#editaDados${aluno_id}`).find('#telefone_aluno').val();
+        const idade = $(`#editaDados${aluno_id}`).find('#idade_aluno').val();
+        const data_nascimento = $(`#editaDados${aluno_id}`).find('#data_nascimento').val();
+
+        //CRIANDO DICIONARIO
+        var dict = [{ "nome": nome, "email": email, "telefone": telefone, "idade": idade, "data_nascimento": data_nascimento }];
+
+        $.ajax({
+            type: "POST",
+            url: "/editar_registro/"+aluno_id,
+            data: JSON.stringify(dict),
+            contentType: "application/json",
+            dataType: 'json',
+            success: function (result) {
+                numRows.innerHTML = result.rows;
+            }
+        });
+
+        window.location.reload();
+    }
+
+</script>
+
+</html>
