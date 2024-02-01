@@ -7,4 +7,10 @@ Em seguida, deverá iniciar o ambiente virtual. Ambiente virtual inicializado, o
 
 Lembrando que, para realizar as operações com o banco de dados, o usuário deverá criar sua string de conexão e inseri-lá no arquivo main.py
 
-Para este projeto foram usados: HTML, JQUERY, JAVASCRIPT, MOMENTJS, CSS, BOOTSRAP, FLASK, PYTHON, SQLALCHEMY, e POSTGRESQL como SGBD.
+O projeto possui uma imagem Docker, o que facilita o deploy em alguns servidores.
+
+Para este projeto foram usados: 
+FRONTEND: HTML, CSS, BOOTSTRAP. JavaScript, JQUERY, plugin JQUERY DATATABLE, plugin MOMENTJS;
+BACKEND: PYTHON, FLASK, SQLALCHEMY;
+DATABASE: POSTGRESQL;
+CONTAINER: DOCKER.
