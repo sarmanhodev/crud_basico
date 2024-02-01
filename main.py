@@ -15,7 +15,7 @@ app = Flask(__name__, template_folder='./templates')
 
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {"pool_pre_ping": True}  
 
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:ROOT@localhost/crud_basico"
+app.config["SQLALCHEMY_DATABASE_URI"] = "[INSERIR STRING DE CONEXÃO COM O BANCO DE DADOS]"
 
 app.config["SECRET_KEY"] = 'secret'
 db.init_app(app)
@@ -26,6 +26,7 @@ def home():
     alunos = db.session.query(Alunos).all()
     
     return render_template('home.html', alunos=alunos)
+
 
 #INSERT
 @app.route('/cadastrar_novo_aluno', methods=['GET', 'POST'])
